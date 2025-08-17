@@ -39,7 +39,9 @@ npm run build
 
 --- 
 
-## Workflow 
+## Personal-Workflow 
 
 Step 1: Setup React UI
 Step 2: Redux Store - messages setup
+Step 3: Threejs bubbles animation
+Step 4: Integrate bubbles animation on click send
