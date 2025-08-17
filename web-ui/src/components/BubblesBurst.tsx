@@ -12,7 +12,7 @@ type Bubble = {
 export default function MovingBubbles({
   trigger,
   bottomInset = 64,
-  count = 6, // number of bubbles
+  count = 7, // number of bubbles
   minR = 0.5, // min radius
   maxR = 0.7, // max radius
   minSpeed = 0.03, // min upward speed
@@ -173,12 +173,11 @@ export default function MovingBubbles({
 
     if (trigger > 0) animate();
 
-    // Cleanup if component unmounts before the round ends
     return () => {
       cancelAnimationFrame(raf);
       for (const b of bubbles) {
         scene.remove(b.mesh);
-        // b.mat.dispose();
+        b.mat.dispose();
       }
       unitSphere.dispose();
       baseMat.dispose();
