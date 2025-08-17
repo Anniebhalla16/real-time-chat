@@ -1,8 +1,8 @@
 import './App.css';
-import ChatBox from './components/Chatbox';
+import MovingBall from './components/MovingBubbles';
 
 function App() {
-  return <ChatBox />;
+  return <MovingBall count={12} />;
 }
 
 export default App;
