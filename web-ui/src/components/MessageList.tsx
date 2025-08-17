@@ -1,13 +1,19 @@
 import { Box, List, Typography } from '@mui/material';
-import { Fragment, useMemo, useRef } from 'react';
+import { Fragment, useEffect, useMemo, useRef } from 'react';
 import { useAppSelector } from '../utils/reduxHooks';
 import { type ChatMessage } from '../utils/types';
-import MovingBubbles from './BubblesBurst';
+import BubblesBurst from './BubblesBurst';
 
 export default function MessageList() {
   const listRef = useRef<HTMLDivElement | null>(null);
   const messages = useAppSelector<ChatMessage[]>((s) => s.messages.items);
   const ctr = useAppSelector((s) => s.messages.ctr);
+
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+  }, [messages.length]);
 
   const grouped = useMemo(() => {
     console.log(messages.length);
@@ -38,7 +44,7 @@ export default function MessageList() {
         gap: 0.75,
       }}
     >
-      <MovingBubbles trigger={ctr} />
+      <BubblesBurst trigger={ctr} />
       <List
         disablePadding
         sx={{

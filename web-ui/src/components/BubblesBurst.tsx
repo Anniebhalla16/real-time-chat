@@ -9,7 +9,7 @@ type Bubble = {
   mat: THREE.MeshPhysicalMaterial;
 };
 
-export default function MovingBubbles({
+export default function BubblesBurst({
   trigger,
   bottomInset = 64,
   count = 7, // number of bubbles
