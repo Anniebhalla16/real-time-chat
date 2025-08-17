@@ -1,26 +1,24 @@
 import { Box, List, Typography } from '@mui/material';
-import { useRef, useState } from 'react';
-import type { ChatMessage } from '../utils/types';
-
-const bubbleSx = {
-  display: 'inline-block',
-  px: 1.5,
-  py: 1,
-  maxWidth: '80%',
-  borderRadius: '18px',
-  bgcolor: 'primary.main',
-  color: 'primary.contrastText',
-  wordBreak: 'break-word' as const,
-  whiteSpace: 'pre-wrap' as const,
-  // notch effect by sharpening one corner
-  borderTopRightRadius: '18px',
-  borderTopLeftRadius: '6px',
-  boxShadow: 1,
-};
+import { Fragment, useMemo, useRef } from 'react';
+import { useAppSelector } from '../utils/reduxHooks';
+import { type ChatMessage } from '../utils/types';
 
 export default function MessageList() {
   const listRef = useRef<HTMLDivElement | null>(null);
-  const [messages] = useState<ChatMessage[]>([]);
+  const messages = useAppSelector<ChatMessage[]>((s) => s.messages.items);
+
+  const grouped = useMemo(() => {
+    console.log(messages.length);
+    const out: Array<{ msg: ChatMessage; showMeta: boolean }> = [];
+    for (let i = 0; i < messages.length; i++) {
+      const m = messages[i];
+      const prev = messages[i - 1];
+      const showMeta =
+        !prev || prev.author !== m.author || m.ts - prev.ts > 2 * 60 * 1000;
+      out.push({ msg: m, showMeta });
+    }
+    return out;
+  }, [messages]);
 
   return (
     <Box
@@ -46,13 +44,69 @@ export default function MessageList() {
           gap: 0.75,
         }}
       >
-        {messages.map((msg, i) => (
-          <Box sx={bubbleSx} key={i}>
-            <Typography variant="body1" component="div">
-              {msg.text}
-            </Typography>
-          </Box>
-        ))}
+        {grouped.map(({ msg, showMeta }) => {
+          const time = new Date(msg.ts).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+
+          const bubbleSx = {
+            display: 'inline-block',
+            px: 1.5,
+            py: 1,
+            borderRadius: '18px',
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+            wordBreak: 'break-word' as const,
+            whiteSpace: 'pre-wrap' as const,
+            borderTopRightRadius: '18px',
+            borderTopLeftRadius: '6px',
+            boxShadow: 1,
+          };
+
+          return (
+            <Fragment key={msg.id}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  alignItems: 'flex-end',
+                  px: 0.5,
+                }}
+              >
+                <Box sx={{ textAlign: 'right' }}>
+                  {showMeta && (
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        mb: 0.25,
+                        color: 'text.secondary',
+                        display: 'block',
+                      }}
+                    >
+                      {msg.author}
+                    </Typography>
+                  )}
+                  <Box sx={bubbleSx}>
+                    <Typography variant="body1" component="div">
+                      {msg.text}
+                    </Typography>
+                  </Box>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      mt: 0.25,
+                      color: 'text.disabled',
+                      display: 'block',
+                    }}
+                  >
+                    {time}
+                  </Typography>
+                </Box>
+              </Box>
+            </Fragment>
+          );
+        })}
       </List>
     </Box>
   );

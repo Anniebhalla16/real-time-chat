@@ -36,3 +36,10 @@ npm run dev            # Vite (default http://localhost:5173)
 # build
 npm run build
 ```
+
+--- 
+
+## Workflow 
+
+Step 1: Setup React UI
+Step 2: Redux Store - messages setup

@@ -4,3 +4,8 @@ export type ChatMessage = {
   text: string;
   ts: number;   
 };
+
+export type MessagesState = {
+  items: ChatMessage[],
+  ctr: number
+}

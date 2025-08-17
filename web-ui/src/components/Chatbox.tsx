@@ -14,7 +14,7 @@ export default function ChatBox() {
         }}
         className="bg-blue-200"
       >
-        <CardHeader title="Live Chat" />
+        <CardHeader title="Real-Time Chat" />
         <CardContent sx={{ pt: 0 }}>
           <Box
             sx={{
