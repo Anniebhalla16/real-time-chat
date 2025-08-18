@@ -1,17 +1,55 @@
-// Socket.IO event channels
+export type JSONRPCId = string | number | null;
+
+export const METHOD  = {
+  SEND_MESSAGE:'sendMessage',
+  LIST_RECENT:'listRecent',
+} as const;
+
+
+export interface JSONRPCRequest {
+  jsonrpc: '2.0';
+  method: typeof METHOD[keyof typeof METHOD];
+  params?: unknown;
+  id?: JSONRPCId;
+}
+
+export interface JSONRPCSuccess<T = unknown>  {
+  jsonrpc: '2.0';
+  id: JSONRPCId;
+  result: T;
+}
+
+export interface JSONRPCError {
+  jsonrpc: '2.0';
+  id: JSONRPCId;
+  error: { code: number; message: string; data?: unknown };
+}
+
+export type JSONRPCResponse = JSONRPCSuccess | JSONRPCError;
+
+export type ChatMessage = {
+  id: string;
+  user: string;
+  text: string;
+  ts: number;   
+};
+
+export interface SendMessageParams {
+  text: string;
+}
+
+export const CODES = {
+  INVALID_REQUEST: -32600,
+  METHOD_NOT_FOUND: -32601,
+  INVALID_PARAMS: -32602,
+  INTERNAL_ERROR: -32603
+} as const;
+
 export const SOCKET_EVENTS = {
-  RPC_REQUEST: 'rpc/request',
-  RPC_RESPONSE: 'rpc/response',
-} as const;
-
-// broadcasts, notifications
-export const CHAT_EVENTS = {
-  SEND: 'chat:send',        // client → server
-  NEW_MESSAGE: 'chat:message', // server → all clients
-} as const;
-
-export const RPC_METHODS = {
-  ChatJoin: 'chat.join',
-  ChatSend: 'chat.send',
-  ChatHistory: 'chat.history',
-} as const;
+    REQUEST : "rpc/request",
+    RESPONSE: 'rpc/response',
+    NOTIFY : 'rpc/notify'
+}
+export const NOTIFY_EVENTS = {
+    NEW_MESSAGE : "message/new"
+}
