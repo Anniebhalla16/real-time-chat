@@ -1,12 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  type Action,
+  type PayloadAction,
+} from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-import type { MessagesState } from '../../utils/types';
+import { rpc } from '../../utils/rpc';
+import {
+  NOTIFY_EVENTS,
+  RPC_METHODS,
+  type ChatMessage,
+  type MessagesState,
+} from '../../utils/types';
 
 const initialState: MessagesState = {
   items: [
     {
       id: uuidv4(),
-      author: 'System',
+      user: 'System',
       text: 'Welcome to General-Room. Start Chatting',
       ts: Date.now(),
     },
@@ -14,22 +25,48 @@ const initialState: MessagesState = {
   ctr: 0,
 };
 
-export const messagesSlice = createSlice({
+export const listRecentRPC = createAsyncThunk<ChatMessage[]>(
+  RPC_METHODS.LIST_RECENT,
+  async () => rpc.call<ChatMessage[]>(RPC_METHODS.LIST_RECENT, { limit: 50 })
+);
+
+export const sendMessageRPC = createAsyncThunk<void, { text: string }>(
+  RPC_METHODS.SEND_MESSAGE,
+  async ({ text }) => {
+    await rpc.call(RPC_METHODS.SEND_MESSAGE, { text });
+  }
+);
+
+const messagesSlice = createSlice({
   name: 'message',
   initialState,
   reducers: {
-    addMessage: (state, action) => {
-      state.items = [
-        ...state.items,
-        { text: action.payload, id: uuidv4(), ts: Date.now(), author: 'You' },
-      ];
-      state.ctr += 1;
+    addMessage: (state, action: PayloadAction<ChatMessage>) => {
+      state.items.push(action.payload);
     },
     clearMessages: (state) => {
       state.items = [];
     },
+    burstNow: (state) => {
+      state.ctr += 1;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(listRecentRPC.fulfilled, (state, action) => {
+      state.items = action.payload;
+    });
   },
 });
 
-export const { addMessage, clearMessages } = messagesSlice.actions;
+export const { addMessage, clearMessages, burstNow } = messagesSlice.actions;
 export default messagesSlice.reducer;
+
+export function initMessageSocket(storeDispatch: (a: Action) => void) {
+  const handler = (note: { type: string; payload: ChatMessage }) => {
+    if (note?.type === NOTIFY_EVENTS.NEW_MESSAGE) {
+      storeDispatch(addMessage(note.payload));
+    }
+  };
+  rpc.onNotify(handler);
+  return () => rpc.offNotify(handler);
+}

@@ -1,7 +1,7 @@
 import SendIcon from '@mui/icons-material/Send';
 import { IconButton, Paper, TextField } from '@mui/material';
 import { useState, type KeyboardEvent } from 'react';
-import { addMessage } from '../redux/features/messageSlice';
+import { burstNow, sendMessageRPC } from '../redux/features/messageSlice';
 import { useAppDispatch } from '../utils/reduxHooks';
 
 export default function MessageInput() {
@@ -11,7 +11,8 @@ export default function MessageInput() {
   const onSend = async () => {
     const t = text.trim();
     if (!t) return;
-    dispatch(addMessage(t));
+    dispatch(burstNow());
+    dispatch(sendMessageRPC({ text: t }));
     setText('');
   };
 

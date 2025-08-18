@@ -22,7 +22,7 @@ export default function MessageList() {
       const m = messages[i];
       const prev = messages[i - 1];
       const showMeta =
-        !prev || prev.author !== m.author || m.ts - prev.ts > 2 * 60 * 1000;
+        !prev || prev.user !== m.user || m.ts - prev.ts > 2 * 60 * 1000;
       out.push({ msg: m, showMeta });
     }
     return out;
@@ -93,7 +93,7 @@ export default function MessageList() {
                         display: 'block',
                       }}
                     >
-                      {msg.author}
+                      {msg.user}
                     </Typography>
                   )}
                   <Box sx={bubbleSx}>
