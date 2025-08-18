@@ -8,7 +8,7 @@ A minimal real-time chat application.
 - **3D Icon:** Three.js “bubble burst” animation on **send**
 - **Cross-browser:** Chrome, Firefox, Edge
 
-[▶️ Demo-Video (Google Drive)](https://drive.google.com/file/d/1712cj_UE2SKCkXesng7vVoW4ZJQkGs_m/view?usp=drive_link)
+[▶️ Demo-Video](https://drive.google.com/file/d/1OFXPGQqIf_Ku8WwyxRXxiBB088h-1fyd/view?usp=sharing)
 
 ---
 
