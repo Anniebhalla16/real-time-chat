@@ -49,7 +49,7 @@ Tested on Chrome, Firefox, and Edge (latest).
 
 - A lightweight Three.js scene renders a **bubble-burst** style animation on **send**.
 - The animation is triggered from the message send action (Redux dispatch → UI side-effect).
-- You can tweak the effect in `web-ui/src/three/` (particle count, lifespan, easing).
+- You can tweak the effect in `web-ui/src/components/BubbleBurst.tsx` (particle count, lifespan, easing).
 
 ---
 
