@@ -163,7 +163,7 @@ export default function BubblesBurst({
         // cleanup meshes/materials from this burst
         for (const b of bubbles) {
           scene.remove(b.mesh);
-          b.mesh.geometry.dispose(); // geometry is shared; safe to skip if using unitSphere
+          b.mesh.geometry.dispose();
           b.mat.dispose();
         }
         unitSphere.dispose();
