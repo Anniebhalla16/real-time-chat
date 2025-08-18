@@ -24,6 +24,8 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
   console.log('socket connected:', socket.id);
+  const { userId } = socket.handshake.auth || {};
+  console.log("user connected:", userId, socket.id);
   // any rpc/request to server is handled by handleRPC
   socket.on(SOCKET_EVENTS.REQUEST, (req) => handleRPC(io, socket, req));
   socket.on('disconnect', (reason) => {

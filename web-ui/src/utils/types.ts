@@ -1,6 +1,6 @@
 export type ChatMessage = {
   id: string;
-  user: string;
+  userId: string;
   text: string;
   ts: number;
 };

@@ -1,3 +1,4 @@
+import { Socket } from 'socket.io';
 import { v4 as uuid } from 'uuid';
 import { ChatMessage } from './types';
 
@@ -6,25 +7,17 @@ type User = { socketId: string; name: string };
 const messages: ChatMessage[] = [];          // global message history
 const users = new Map<string, User>();   // socketId -> user
 
-// Update if exists, else insert
-export function upsertUser(socketId: string, name?: string) {
-  const existing = users.get(socketId);
-  const user: User = existing ?? { socketId, name: `User-${socketId.slice(0, 4)}` };
-  if (name) user.name = name;
-  users.set(socketId, user);
-  return user;
-}
-
-export function addMessage(socketId: string, text: string): ChatMessage {
+export function addMessage(socket:Socket, text: string): ChatMessage {
   const trimmed = text.trim();
   if (!trimmed) {
     throw new Error('Message text cannot be empty');
   }
 
-  const user = upsertUser(socketId);
+  const {userId } = socket.handshake.auth;
+
   const msg: ChatMessage = {
     id: uuid(),
-    user: user.name,
+    userId,
     text: trimmed,
     ts: Date.now(),
   };

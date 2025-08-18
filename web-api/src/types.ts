@@ -29,7 +29,7 @@ export type JSONRPCResponse = JSONRPCSuccess | JSONRPCError;
 
 export type ChatMessage = {
   id: string;
-  user: string;
+  userId: string;
   text: string;
   ts: number;   
 };

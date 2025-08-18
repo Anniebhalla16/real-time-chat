@@ -14,13 +14,15 @@ export type RPCResponse = {
   error?: { code: number; message: string; data?: unknown };
 };
 
+type ConnectAuth = { userId?: string };
+
 const _id = 1;
 
 class RPCClient {
   private socket!: Socket;
 
-  async connect(url: string) {
-    this.socket = io(url, { transports: ['websocket'] });
+  async connect(url: string, auth: ConnectAuth) {
+    this.socket = io(url, { transports: ['websocket'] , auth});
     await new Promise<void>((resolve, reject) => {
       this.socket.once('connect', () => resolve());
       this.socket.once('connect_error', (e) => reject(e));

@@ -1,5 +1,6 @@
 import { Box, Card, CardContent, CardHeader } from '@mui/material';
 import { useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import {
   initMessageSocket,
   listRecentRPC,
@@ -12,13 +13,27 @@ import MessageList from './MessageList';
 export default function ChatBox() {
   const dispatch = useAppDispatch();
 
+  function getOrCreateUserId() {
+    const key = 'userId';
+    let id = sessionStorage.getItem(key);
+    if (!id) {
+      const name = 'User'; // or fetch from login form
+      id = `${name}_${uuidv4()}`;
+      sessionStorage.setItem(key, id);
+    }
+    return id;
+  }
+
   useEffect(() => {
     let stop: (() => void) | undefined;
+    const userId = getOrCreateUserId();
+
     let alive = true;
     (async () => {
       if (!rpc.isConnected()) {
         await rpc.connect(
-          import.meta.env.VITE_BACKEND_URL ?? 'http://localhost:3001'
+          import.meta.env.VITE_BACKEND_URL ?? 'http://localhost:3001',
+          { userId }
         );
       }
       if (!alive) return;

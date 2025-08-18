@@ -17,7 +17,7 @@ const initialState: MessagesState = {
   items: [
     {
       id: uuidv4(),
-      user: 'System',
+      userId: 'System',
       text: 'Welcome to General-Room. Start Chatting',
       ts: Date.now(),
     },

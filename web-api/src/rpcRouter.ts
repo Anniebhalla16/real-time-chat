@@ -20,7 +20,7 @@ export async function handleRPC(io: Server, socket: Socket, req: JSONRPCRequest)
     switch (req.method) {
       case METHOD.SEND_MESSAGE: {
         const { text } = req.params as SendMessageParams;
-        const msg = addMessage(socket.id, text);   
+        const msg = addMessage(socket, text);   
         io.emit(SOCKET_EVENTS.NOTIFY, { type: NOTIFY_EVENTS.NEW_MESSAGE, payload: msg });
         return socket.emit(SOCKET_EVENTS.RESPONSE, result(req.id, msg));
       }

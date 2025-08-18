@@ -8,6 +8,8 @@ export default function MessageList() {
   const listRef = useRef<HTMLDivElement | null>(null);
   const messages = useAppSelector<ChatMessage[]>((s) => s.messages.items);
   const ctr = useAppSelector((s) => s.messages.ctr);
+  const sessionUserId =
+    sessionStorage.getItem('userId') || localStorage.getItem('userId')!;
 
   useEffect(() => {
     const el = listRef.current;
@@ -22,7 +24,7 @@ export default function MessageList() {
       const m = messages[i];
       const prev = messages[i - 1];
       const showMeta =
-        !prev || prev.user !== m.user || m.ts - prev.ts > 2 * 60 * 1000;
+        !prev || prev.userId !== m.userId || m.ts - prev.ts > 2 * 60 * 1000;
       out.push({ msg: m, showMeta });
     }
     return out;
@@ -59,6 +61,10 @@ export default function MessageList() {
             minute: '2-digit',
           });
 
+          const isSelf = sessionUserId === msg.userId;
+          console.log(sessionUserId, msg.userId);
+          console.log(isSelf);
+
           const bubbleSx = {
             display: 'inline-block',
             px: 1.5,
@@ -78,12 +84,12 @@ export default function MessageList() {
               <Box
                 sx={{
                   display: 'flex',
-                  justifyContent: 'flex-end',
-                  alignItems: 'flex-end',
+                  justifyContent: isSelf ? 'flex-end' : 'flex-start',
+                  alignItems: isSelf ? 'flex-end' : 'flex-start',
                   px: 0.5,
                 }}
               >
-                <Box sx={{ textAlign: 'right' }}>
+                <Box sx={{ textAlign: isSelf ? 'right' : 'start' }}>
                   {showMeta && (
                     <Typography
                       variant="body2"
@@ -93,7 +99,7 @@ export default function MessageList() {
                         display: 'block',
                       }}
                     >
-                      {msg.user}
+                      {msg.userId}
                     </Typography>
                   )}
                   <Box sx={bubbleSx}>
