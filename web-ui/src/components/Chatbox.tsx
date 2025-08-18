@@ -17,7 +17,7 @@ export default function ChatBox() {
     const key = 'userId';
     let id = sessionStorage.getItem(key);
     if (!id) {
-      const name = 'User'; // or fetch from login form
+      const name = 'User';
       id = `${name}_${uuidv4()}`;
       sessionStorage.setItem(key, id);
     }
