@@ -99,7 +99,7 @@ export default function MessageList() {
                         display: 'block',
                       }}
                     >
-                      {msg.userId}
+                      {msg.userId.slice(0, 8)}
                     </Typography>
                   )}
                   <Box sx={bubbleSx}>
