@@ -43,7 +43,7 @@ Open **two browser tabs** at `http://localhost:5173`, type messages in one tab, 
 - **Node.js 18+**
 - **npm** 
 
-Tested on Chrome, Firefox, and Edge (latest).
+Tested on Chrome, Firefox, and Edge 
 
 --- 
 
