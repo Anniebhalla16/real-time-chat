@@ -1,3 +1,4 @@
+// Redux messages feature to JSON RPCsocket
 import {
   createAsyncThunk,
   createSlice,
@@ -7,11 +8,37 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { rpc } from '../../utils/rpc';
 import {
-  NOTIFY_EVENTS,
   RPC_METHODS,
+  SOCKET_EVENTS,
   type ChatMessage,
   type MessagesState,
 } from '../../utils/types';
+
+// subscribes to the socket
+// on receiving a new message push to redux state
+export function initMessageSocket(storeDispatch: (a: Action) => void) {
+  const handler = (note: { type: string; payload: ChatMessage }) => {
+    if (note?.type === SOCKET_EVENTS.NOTIFY) {
+      storeDispatch(addMessage(note.payload));
+    }
+  };
+  rpc.onNotify(handler);
+  return () => rpc.offNotify(handler);
+}
+
+export const listRecentRPC = createAsyncThunk<ChatMessage[]>(
+  RPC_METHODS.LIST_RECENT,
+  async () => rpc.call<ChatMessage[]>(RPC_METHODS.LIST_RECENT, { limit: 50 })
+);
+
+//  sends message to the server and only
+// adds to the state when there is a notification from the server (incl. sender)
+export const sendMessageRPC = createAsyncThunk<void, { text: string }>(
+  RPC_METHODS.SEND_MESSAGE,
+  async ({ text }) => {
+    await rpc.call(RPC_METHODS.SEND_MESSAGE, { text });
+  }
+);
 
 const initialState: MessagesState = {
   items: [
@@ -24,18 +51,6 @@ const initialState: MessagesState = {
   ],
   ctr: 0,
 };
-
-export const listRecentRPC = createAsyncThunk<ChatMessage[]>(
-  RPC_METHODS.LIST_RECENT,
-  async () => rpc.call<ChatMessage[]>(RPC_METHODS.LIST_RECENT, { limit: 50 })
-);
-
-export const sendMessageRPC = createAsyncThunk<void, { text: string }>(
-  RPC_METHODS.SEND_MESSAGE,
-  async ({ text }) => {
-    await rpc.call(RPC_METHODS.SEND_MESSAGE, { text });
-  }
-);
 
 const messagesSlice = createSlice({
   name: 'message',
@@ -60,13 +75,3 @@ const messagesSlice = createSlice({
 
 export const { addMessage, clearMessages, burstNow } = messagesSlice.actions;
 export default messagesSlice.reducer;
-
-export function initMessageSocket(storeDispatch: (a: Action) => void) {
-  const handler = (note: { type: string; payload: ChatMessage }) => {
-    if (note?.type === NOTIFY_EVENTS.NEW_MESSAGE) {
-      storeDispatch(addMessage(note.payload));
-    }
-  };
-  rpc.onNotify(handler);
-  return () => rpc.offNotify(handler);
-}

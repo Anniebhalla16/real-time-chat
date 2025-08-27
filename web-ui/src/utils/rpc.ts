@@ -16,7 +16,6 @@ export type RPCResponse = {
 
 type ConnectAuth = { userId?: string };
 
-const _id = 1;
 
 class RPCClient {
   private socket!: Socket;
@@ -39,7 +38,8 @@ class RPCClient {
   }
 
   call<T = unknown>(method: string, params?: unknown): Promise<T> {
-    const id = _id;
+    const id = Date.now() + Math.random(); 
+
     return new Promise<T>((resolve, reject) => {
       const onResp = (res: RPCResponse) => {
         if (res?.id !== id) return;

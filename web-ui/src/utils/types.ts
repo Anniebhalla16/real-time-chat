@@ -21,6 +21,3 @@ export const SOCKET_EVENTS = {
   NOTIFY: 'rpc/notify',
 } as const;
 
-export const NOTIFY_EVENTS = {
-  NEW_MESSAGE: 'message/new',
-} as const;

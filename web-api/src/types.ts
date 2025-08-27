@@ -50,6 +50,3 @@ export const SOCKET_EVENTS = {
     RESPONSE: 'rpc/response',
     NOTIFY : 'rpc/notify'
 }
-export const NOTIFY_EVENTS = {
-    NEW_MESSAGE : "message/new"
-}

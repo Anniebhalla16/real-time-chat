@@ -18,7 +18,6 @@ export default function MessageList() {
   }, [messages.length]);
 
   const grouped = useMemo(() => {
-    console.log(messages.length);
     const out: Array<{ msg: ChatMessage; showMeta: boolean }> = [];
     for (let i = 0; i < messages.length; i++) {
       const m = messages[i];

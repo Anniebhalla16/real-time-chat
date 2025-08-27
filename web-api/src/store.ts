@@ -5,7 +5,6 @@ import { ChatMessage } from './types';
 type User = { socketId: string; name: string };
 
 const messages: ChatMessage[] = [];          // global message history
-const users = new Map<string, User>();   // socketId -> user
 
 export function addMessage(socket:Socket, text: string): ChatMessage {
   const trimmed = text.trim();
