@@ -24,6 +24,7 @@ export default function ChatBox() {
     return id;
   }
 
+  // Connect to the server
   useEffect(() => {
     let stop: (() => void) | undefined;
     const userId = getOrCreateUserId();

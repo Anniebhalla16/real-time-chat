@@ -22,11 +22,14 @@ const io = new Server(server, {
   cors: { origin: ORIGIN }
 });
 
+// io= socket server instance , global operations, emit, of, to
+// socket = one client connection to the server
 io.on('connection', (socket) => {
   console.log('socket connected:', socket.id);
   const { userId } = socket.handshake.auth || {};
   console.log("user connected:", userId, socket.id);
   // any rpc/request to server is handled by handleRPC
+  //  socket server io is sent at an argument
   socket.on(SOCKET_EVENTS.REQUEST, (req) => handleRPC(io, socket, req));
   socket.on('disconnect', (reason) => {
     console.log('socket disconnected:', socket.id, reason);

@@ -20,11 +20,12 @@ export async function handleRPC(io: Server, socket: Socket, req: JSONRPCRequest)
     switch (req.method) {
       case METHOD.SEND_MESSAGE: {
         const { text } = req.params as SendMessageParams;
-        const msg = addMessage(socket, text);   
+        const msg = addMessage(socket, text);  
+        // io will notify all the users connected 
         io.emit(SOCKET_EVENTS.NOTIFY, { type: SOCKET_EVENTS.NOTIFY, payload: msg });
+        // returns the response to the socket - specific client
         return socket.emit(SOCKET_EVENTS.RESPONSE, result(req.id, msg));
       }
-
       case METHOD.LIST_RECENT: {
         const res: JSONRPCSuccess<ChatMessage[]> = { jsonrpc: '2.0', result: getRecent(), id: req.id! };
         return socket.emit(SOCKET_EVENTS.RESPONSE, res);

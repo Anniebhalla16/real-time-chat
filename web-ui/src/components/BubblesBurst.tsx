@@ -31,6 +31,7 @@ export default function BubblesBurst({
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 
+  // Environment set up
   useEffect(() => {
     const mount = mountRef.current!;
     const scene = new THREE.Scene();
@@ -51,6 +52,8 @@ export default function BubblesBurst({
     dir.position.set(3, 5, 2);
     scene.add(dir);
 
+    // Prefilteres Mipmapped Radience Environment Map
+    // RoomEnvironment
     const pmrem = new THREE.PMREMGenerator(renderer);
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
@@ -82,6 +85,7 @@ export default function BubblesBurst({
     const camera = cameraRef.current;
     if (!mount || !renderer || !scene || !camera) return;
 
+    // Sphere Geometry
     const unitSphere = new THREE.SphereGeometry(1, 64, 64);
     const baseMat = new THREE.MeshPhysicalMaterial({
       color: 0x66aaff, // bluish tint
